@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e6f7f6 0%, #f2fbfa 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 24px 64px rgba(16, 185, 129, 0.12);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .hero-icon {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 16px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #22d3ee 0%, #0ea5e9 40%, #06b6d4 100%);
+            display: grid;
+            place-items: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.4em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #0ea5e9 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header p {
+            color: #4b5563;
+            font-size: 1.15em;
+            line-height: 1.5;
+        }
+
+        .segment {
+            display: inline-flex;
+            gap: 10px;
+            background: #eef7f6;
+            padding: 6px;
+            border-radius: 14px;
+            margin-top: 16px;
+        }
+
+        .seg-btn {
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            background: white;
+            color: #0f766e;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .seg-btn.active {
+            background: #14b8a6;
+            color: white;
+            border-color: #0d9488;
+            box-shadow: 0 10px 24px rgba(20, 184, 166, 0.25);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+
+        .radio-option:hover {
+            border-color: #667eea;
+            background: #f5f5f5;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-option input[type="radio"]:checked+label,
+        .radio-option.checked {
+            border-color: #14b8a6;
+            background: #14b8a6;
+            color: white;
+        }
+
+        /* Activity cards */
+        .activity-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .activity-option {
+            padding: 16px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+
+        .activity-option:hover {
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+        }
+
+        .activity-option.selected {
+            border-color: #14b8a6;
+            background: #e7fffb;
+        }
+
+        .activity-title {
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 6px;
+            font-size: 1.05em;
+        }
+
+        .activity-desc {
+            color: #6b7280;
+            line-height: 1.5;
+            font-size: 0.98em;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(20, 184, 166, 0.35);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .result-value {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .weight-goals {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .weight-goals h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .goal-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .goal-label {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .goal-value {
+            color: #764ba2;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            color: #856404;
+        }
+
+        .info-box p {
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 5px;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 25px 20px;
+                border-radius: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 0.95em;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .activity-option {
+                padding: 14px 16px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .result {
+                padding: 20px;
+                margin-top: 20px;
+            }
+
+            .result h2 {
+                font-size: 1.4em;
+            }
+
+            .result-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+                padding: 10px 0;
+            }
+
+            .result-value {
+                font-size: 1.3em;
+            }
+
+            .weight-goals h3 {
+                font-size: 1.1em;
+            }
+
+            .goal-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+                padding: 12px;
+            }
+
+            .goal-label {
+                font-size: 0.9em;
+            }
+
+            .goal-value {
+                font-size: 1.2em;
+                width: 100%;
+            }
+
+            .calculate-btn {
+                padding: 12px;
+                font-size: 1.1em;
+            }
+
+            .info-box {
+                padding: 12px;
+            }
+
+            .info-box p {
+                font-size: 0.85em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+                margin-bottom: 8px;
+            }
+
+            .header p {
+                font-size: 0.9em;
+            }
+
+            .form-group label {
+                font-size: 0.95em;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 10px 12px;
+                font-size: 0.95em;
+            }
+
+            .radio-option {
+                padding: 12px;
+            }
+
+            .result h2 {
+                font-size: 1.2em;
+            }
+
+            .result-item {
+                padding: 8px 0;
+            }
+
+            .result-label {
+                font-size: 0.9em;
+            }
+
+            .result-value {
+                font-size: 1.2em;
+            }
+
+            .goal-label {
+                font-size: 0.85em;
+                line-height: 1.3;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="hero-icon" aria-hidden="true">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="3" width="16" height="18" rx="2" stroke="white" stroke-width="2"/>
+                    <path d="M8 7H16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M8 11H10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M14 11H16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M8 15H10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M14 15H16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <h1>Calorie Calculator</h1>
+            <p>Calculate your daily calorie needs based on your personal metrics and activity level. Get personalized goals for maintaining or losing weight.</p>
+            <div class="segment" role="tablist" aria-label="Units">
+                <button type="button" id="metricBtn" class="seg-btn active" role="tab" aria-selected="true" onclick="setUnits('metric')">Metric</button>
+                <button type="button" id="imperialBtn" class="seg-btn" role="tab" aria-selected="false" onclick="setUnits('imperial')">Imperial</button>
+            </div>
+        </div>
+
+        <form id="calculatorForm">
+            <div class="form-group">
+                <label>Gender</label>
+                <div class="radio-group">
+                    <div class="radio-option" onclick="selectGender(event, 'male')">
+                        <input type="radio" name="gender" value="male" id="male">
+                        <label for="male"><span aria-hidden="true" style="display:inline-flex;vertical-align:middle;margin-right:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="3" stroke="currentColor" stroke-width="2"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>Male</label>
+                    </div>
+                    <div class="radio-option" onclick="selectGender(event, 'female')">
+                        <input type="radio" name="gender" value="female" id="female">
+                        <label for="female"><span aria-hidden="true" style="display:inline-flex;vertical-align:middle;margin-right:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="3" stroke="currentColor" stroke-width="2"/><path d="M12 12a5 5 0 0 0-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M17 17a5 5 0 0 0-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>Female</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age (years)</label>
+                <input type="number" id="age" name="age" min="1" max="150" required>
+            </div>
+
+            <div class="form-group">
+                <label for="weight" id="weightLabel">Weight (kg)</label>
+                <input type="number" id="weight" name="weight" min="1" step="0.1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="height" id="heightLabel">Height (cm)</label>
+                <input type="number" id="height" name="height" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label>Activity Level</label>
+                <div class="activity-group" id="activityGroup">
+                    <div class="activity-option" data-multiplier="1.2" onclick="selectActivity(event)">
+                        <div class="activity-title">Sedentary</div>
+                        <div class="activity-desc">Spend most of the day sitting, with little or no exercise</div>
+                    </div>
+                    <div class="activity-option" data-multiplier="1.375" onclick="selectActivity(event)">
+                        <div class="activity-title">Light</div>
+                        <div class="activity-desc">Exercise 1–2 hours per week, walk 2–5K steps per day</div>
+                    </div>
+                    <div class="activity-option selected" data-multiplier="1.55" onclick="selectActivity(event)">
+                        <div class="activity-title">Moderate</div>
+                        <div class="activity-desc">Exercise 3–4 times per week, walk 5–10K steps per day</div>
+                    </div>
+                    <div class="activity-option" data-multiplier="1.725" onclick="selectActivity(event)">
+                        <div class="activity-title">Active</div>
+                        <div class="activity-desc">Exercise 5+ times per week, walk 10,000+ steps per day</div>
+                    </div>
+                    <div class="activity-option" data-multiplier="1.9" onclick="selectActivity(event)">
+                        <div class="activity-title">Very Active</div>
+                        <div class="activity-desc">Intense exercise 6–7 times per week, 15K+ steps</div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="calculate-btn">Calculate</button>
+        </form>
+
+        <div id="result" class="result">
+            <h2>Your Calorie Needs</h2>
+            <div class="result-item">
+                <span class="result-label">BMR (Basal Metabolic Rate)</span>
+                <span class="result-value" id="bmr">0</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Daily Calorie Needs</span>
+                <span class="result-value" id="calories">0</span>
+            </div>
+
+            <div class="weight-goals">
+                <h3>Weight Goal Options</h3>
+                <div class="goal-item">
+                    <span class="goal-label">🏋️ Maintain Weight</span>
+                    <span class="goal-value" id="maintain">0</span>
+                </div>
+                <div class="goal-item">
+                    <span class="goal-label">⚖️ Mild Weight Loss (0.25 kg/week)</span>
+                    <span class="goal-value" id="mildLoss">0</span>
+                </div>
+                <div class="goal-item">
+                    <span class="goal-label">🏃 Weight Loss (0.5 kg/week)</span>
+                    <span class="goal-value" id="weightLoss">0</span>
+                </div>
+                <div class="goal-item">
+                    <span class="goal-label">🔥 Extreme Weight Loss (1 kg/week)</span>
+                    <span class="goal-value" id="extremeLoss">0</span>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p><strong>Note:</strong> This calculation uses the Mifflin-St Jeor equation. BMR represents the
+                    calories you burn at rest. Your daily calorie needs include your activity level.</p>
+                <p>A safe weight loss is about 0.5 kg per week (500 calorie deficit per day).</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUnits = 'metric'; // 'metric' or 'imperial'
+
+        function roundTo(value, decimals) {
+            const p = Math.pow(10, decimals);
+            return Math.round(value * p) / p;
+        }
+
+        function setUnits(units) {
+            if (units === currentUnits) return;
+
+            const weightInput = document.getElementById('weight');
+            const heightInput = document.getElementById('height');
+            const weightLabel = document.getElementById('weightLabel');
+            const heightLabel = document.getElementById('heightLabel');
+
+            let weightVal = parseFloat(weightInput.value);
+            let heightVal = parseFloat(heightInput.value);
+
+            if (units === 'imperial') {
+                // Convert existing metric values to imperial for display
+                if (!isNaN(weightVal)) weightInput.value = roundTo(weightVal / 0.45359237, 1); // kg -> lb
+                if (!isNaN(heightVal)) heightInput.value = Math.round(heightVal / 2.54); // cm -> in
+                weightLabel.textContent = 'Weight (lb)';
+                heightLabel.textContent = 'Height (in)';
+                weightInput.step = 1;
+                heightInput.step = 1;
+            } else {
+                // Convert existing imperial values back to metric for display
+                if (!isNaN(weightVal)) weightInput.value = roundTo(weightVal * 0.45359237, 1); // lb -> kg
+                if (!isNaN(heightVal)) heightInput.value = Math.round(heightVal * 2.54); // in -> cm
+                weightLabel.textContent = 'Weight (kg)';
+                heightLabel.textContent = 'Height (cm)';
+                weightInput.step = 0.1;
+                heightInput.step = 1;
+            }
+
+            currentUnits = units;
+
+            // Update segmented control visual state
+            const metricBtn = document.getElementById('metricBtn');
+            const imperialBtn = document.getElementById('imperialBtn');
+            const isMetric = currentUnits === 'metric';
+            metricBtn.classList.toggle('active', isMetric);
+            imperialBtn.classList.toggle('active', !isMetric);
+            metricBtn.setAttribute('aria-selected', String(isMetric));
+            imperialBtn.setAttribute('aria-selected', String(!isMetric));
+        }
+        function selectGender(evt, gender) {
+            document.querySelectorAll('input[type="radio"][name="gender"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.getElementById(gender).checked = true;
+
+            document.querySelectorAll('.radio-option').forEach(option => {
+                option.classList.remove('checked');
+            });
+
+            const clickedOption = evt.currentTarget;
+            clickedOption.classList.add('checked');
+        }
+
+        function selectActivity(evt) {
+            const option = evt.currentTarget;
+            document.querySelectorAll('.activity-option').forEach(el => el.classList.remove('selected'));
+            option.classList.add('selected');
+        }
+
+        document.getElementById('calculatorForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const gender = document.querySelector('input[name="gender"]:checked');
+            if (!gender) {
+                alert('Please select your gender');
+                return;
+            }
+
+            const age = parseInt(document.getElementById('age').value);
+            const weightInputVal = parseFloat(document.getElementById('weight').value);
+            const heightInputVal = parseInt(document.getElementById('height').value);
+            // Convert to metric if user selected imperial
+            const weight = currentUnits === 'imperial' ? (weightInputVal * 0.45359237) : weightInputVal; // kg
+            const height = currentUnits === 'imperial' ? Math.round(heightInputVal * 2.54) : heightInputVal; // cm
+            const selectedActivity = document.querySelector('.activity-option.selected');
+            const activityLevel = selectedActivity ? parseFloat(selectedActivity.getAttribute('data-multiplier')) : 1.55;
+
+            // Mifflin-St Jeor equation
+            let bmr;
+            if (gender.value === 'male') {
+                bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            } else {
+                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            }
+
+            const dailyCalories = bmr * activityLevel;
+
+            // Calculate weight goal options
+            const maintainWeight = dailyCalories;
+            const mildWeightLoss = dailyCalories - 250; // ~0.25 kg per week
+            const weightLoss = dailyCalories - 500; // ~0.5 kg per week
+            const extremeWeightLoss = dailyCalories - 1000; // ~1 kg per week
+
+            document.getElementById('bmr').textContent = Math.round(bmr);
+            document.getElementById('calories').textContent = Math.round(dailyCalories);
+            document.getElementById('maintain').textContent = Math.round(maintainWeight) + ' kcal';
+            document.getElementById('mildLoss').textContent = Math.round(mildWeightLoss) + ' kcal';
+            document.getElementById('weightLoss').textContent = Math.round(weightLoss) + ' kcal';
+            document.getElementById('extremeLoss').textContent = Math.round(extremeWeightLoss) + ' kcal';
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.add('show');
+
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    </script>
+</body>
+
+</html>
