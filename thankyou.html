@@ -114,7 +114,7 @@ border: none;
 /* CALENDAR SECTION */
 .calendar-section {
 background: #0f1a14 !important;
-padding: 30px 20px 80px;
+padding: 30px 20px 20px;
 text-align: center;
 }
 
@@ -150,28 +150,16 @@ margin-left: auto;
 margin-right: auto;
 }
 
-.urgency-note {
-display: inline-flex;
-align-items: center;
-gap: 8px;
-background: rgba(77,219,138,0.1);
-border: 1px solid rgba(77,219,138,0.25);
-color: #4ddb8a;
-font-size: 13px;
-font-weight: 600;
-padding: 8px 18px;
-border-radius: 100px;
-margin-bottom: 36px;
-}
-
 #cal-embed {
-max-width: 700px;
+max-width: 600px;
 margin: 0 auto;
 border-radius: 20px;
 overflow: hidden;
 box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-min-height: 600px;
+min-height: 400px;
 background: white;
+transform: scale(0.85);
+transform-origin: top center;
 }
 
 /* FOOTER */
@@ -221,11 +209,8 @@ to { opacity: 1; transform: translateY(0); }
 <section class="calendar-section">
   <div class="container">
     <span class="section-tag">🗓 One More Step</span>
-    <h2>Lose <span>6–12 KG of Body Fat</span><br>In 12 Weeks — Ready?</h2>
+    <h2>Lose <span>6 to 12 KG of Body Fat</span><br>In 12 Weeks. Ready?</h2>
     <p class="sub">If you are a woman between 24 and 40, book a free 30 minute call with me. I will look at your situation and tell you exactly what to do.</p>
-    <div class="urgency-note">
-      ⚡ Limited spots available this week
-    </div>
 
 ```
 <div id="cal-embed"></div>
